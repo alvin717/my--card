@@ -20,6 +20,7 @@ const CONTACT_INFO = {
   cleanPhone: "01076753098",
   email: "aonehair01@naver.com",
   address: "경기도 의정부시 호원동 288",
+  naverMap: "https://map.naver.com/v5/search/%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%9D%98%EC%A0%95%EB%B6%80%EC%8B%9C%20%ED%98%B8%EC%9B%90%EB%8F%99%20288",
   website: "https://hyeong-homepage.vercel.app/",
   blog: "https://blog.naver.com/aonehair01",
   openKakao: "https://open.kakao.com/o/sCaiVWMh",
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTouchCall();
   initContactSave();
   initCopyAddress();
+  initNaverMapLink();
   initShareFeatures();
   checkAutoCallParam();
 });
@@ -103,7 +105,24 @@ function initCopyAddress() {
 }
 
 /**
- * 5. 명함 공유하기 (카카오톡 및 링크 복사)
+ * 5. 네이버 지도 길찾기 링크 처리 (카카오톡 인앱 브라우저 완벽 대응)
+ */
+function initNaverMapLink() {
+  const btnNaverMap = document.getElementById("btnNaverMap");
+  if (!btnNaverMap) return;
+
+  const isKakaoTalk = /KAKAOTALK/i.test(navigator.userAgent);
+  btnNaverMap.addEventListener("click", (e) => {
+    if (isKakaoTalk) {
+      e.preventDefault();
+      // 카카오톡 인앱 브라우저 보안 제약 우회를 위해 외부 기본 브라우저로 열기
+      window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(CONTACT_INFO.naverMap)}`;
+    }
+  });
+}
+
+/**
+ * 6. 명함 공유하기 (카카오톡 및 링크 복사)
  */
 function initShareFeatures() {
   const btnShareKakao = document.getElementById("btnShareKakao");
